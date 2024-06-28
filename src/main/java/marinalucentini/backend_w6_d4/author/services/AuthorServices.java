@@ -67,4 +67,11 @@ newAuthorForDb.setAvatar("https://unsplash.com/it/foto/una-donna-con-i-capelli-r
     public String uploadImage(MultipartFile file) throws IOException{
         return (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
     }
+    // save immagine nel db dell'autore corrispondente
+    public Author saveImage(String urlImage, UUID Authorid){
+        Author authorFound = findById(Authorid);
+        authorFound.setAvatar(urlImage);
+       return authorRepository.save(authorFound);
+
+    }
 }
