@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -43,5 +45,9 @@ public class AuthorController {
     public void deleteAuthor(@PathVariable UUID authorId){
         authorServices.findByIdAndDelete(authorId);
     System.out.println("L'autore è stato correttamente cancellato");
+}
+@PostMapping("/{authorId}/avatar")
+public String uploadAvatar( @RequestParam("avatar") MultipartFile image) throws IOException {
+    return authorServices.uploadImage(image);
 }
 }

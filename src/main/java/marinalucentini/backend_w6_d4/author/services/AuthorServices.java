@@ -1,6 +1,7 @@
 package marinalucentini.backend_w6_d4.author.services;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import marinalucentini.backend_w6_d4.author.entities.Author;
 import marinalucentini.backend_w6_d4.author.payload.NewAuthorDto;
 import marinalucentini.backend_w6_d4.author.repository.AuthorRepository;
@@ -12,7 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -60,5 +63,8 @@ newAuthorForDb.setAvatar("https://unsplash.com/it/foto/una-donna-con-i-capelli-r
         Author found = this.findById(authorId);
      authorRepository.delete(found);
     }
-
+//upload immagine
+    public String uploadImage(MultipartFile file) throws IOException{
+        return (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+    }
 }
