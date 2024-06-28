@@ -47,10 +47,10 @@ public class AuthorController {
     System.out.println("L'autore è stato correttamente cancellato");
 }
 @PostMapping("/{authorId}/avatar")
-public String uploadAvatar(@PathVariable UUID authorId, @RequestParam("avatar") MultipartFile image) throws IOException {
+public Author uploadAvatar(@PathVariable UUID authorId, @RequestParam("avatar") MultipartFile image) throws IOException {
     String imageUrl = authorServices.uploadImage(image);
     Author updatedAuthor = authorServices.saveImage(imageUrl, authorId);
-    String message = "Immagine caricata nel db correttamente";
-    return message;
+
+    return updatedAuthor;
 }
 }
