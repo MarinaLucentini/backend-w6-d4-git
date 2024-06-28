@@ -1,6 +1,8 @@
 package marinalucentini.backend_w6_d4.author.services;
 
+import com.cloudinary.Cloudinary;
 import marinalucentini.backend_w6_d4.author.entities.Author;
+import marinalucentini.backend_w6_d4.author.payload.NewAuthorDto;
 import marinalucentini.backend_w6_d4.author.repository.AuthorRepository;
 import marinalucentini.backend_w6_d4.exceptions.BadRequestException;
 import marinalucentini.backend_w6_d4.exceptions.NotFoundException;
@@ -17,17 +19,20 @@ import java.util.UUID;
 public class AuthorServices {
     @Autowired
     AuthorRepository authorRepository;
+    @Autowired
+    Cloudinary cloudinary;
     // salvato l'utente correttamente nel db dopo aver fatto il post
-    public Author saveAuthor(Author newAuthor){
-authorRepository.findByEmail(newAuthor.getEmail()).ifPresent(
+    public Author saveAuthor(NewAuthorDto newAuthor){
+authorRepository.findByEmail(newAuthor.email()).ifPresent(
         author -> {
-            throw new BadRequestException("L'email " + newAuthor.getEmail() + " è già in uso!");
+            throw new BadRequestException("L'email " + newAuthor.email() + " è già in uso!");
         }
 );
-newAuthor.setAvatar("https://unsplash.com/it/foto/una-donna-con-i-capelli-ricci-in-posa-per-una-foto-tJB3XMRErxQ");
+Author newAuthorForDb = new Author(newAuthor.name(), newAuthor.lastName(), newAuthor.email(), newAuthor.dateOfBirth());
+newAuthorForDb.setAvatar("https://unsplash.com/it/foto/una-donna-con-i-capelli-ricci-in-posa-per-una-foto-tJB3XMRErxQ");
 
-        System.out.println("L'autore " + newAuthor.getName() + " è stato correttamente salvato nel db." );
-      return   authorRepository.save(newAuthor);
+        System.out.println("L'autore " + newAuthorForDb.getName() + " è stato correttamente salvato nel db." );
+      return   authorRepository.save(newAuthorForDb);
     }
     // paginazione
     public Page<Author> getAuthors(int pageNumber, int pageSize, String sortBy){
